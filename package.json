@@ -1,0 +1,30 @@
+{
+  "name": "cphi-shanghai-crawler",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "crawl:all": "bun src/crawlAll.ts",
+    "crawl:products": "bun src/crawlCompanyProducts.ts",
+    "crawl:all-products": "bun src/crawlAllProducts.ts",
+    "crawl:products-incremental": "bun src/crawlProductsIncremental.ts",
+    "export:excel": "bun src/exportExcel.ts",
+    "db:setup": "bun src/setupDatabase.ts",
+    "db:push": "prisma db push",
+    "prisma:generate": "prisma generate",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "6",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "6",
+    "axios": "^1.15.2",
+    "exceljs": "^4.4.0",
+    "puppeteer-core": "^24.42.0"
+  }
+}

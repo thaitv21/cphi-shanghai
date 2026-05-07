@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Exhibitor {
+  id                                   Int      @id @default(autoincrement())
+  apiId                                Int      @unique
+  exhibitionId                         Int
+  exhibitionName                       String?
+  memberId                             Int
+  companyId                            Int
+  boothNo                              String?
+  hallNo                               String?
+  exhibitionAreaClassificationId       String?
+  exhibitionAreaClassificationName     String?
+  exhibitionAreaClassificationNameEn   String?
+  companyLogo                          String?
+  country                              String?
+  countryEn                            String?
+  companyName                          String?
+  companyNameEn                        String?
+  category                             String?
+  categoryEn                           String?
+  homepage                             String?
+  homepageEn                           String?
+  rawJson                              String
+  companyRawJson                       String
+  sourceCreatedAt                      String?
+  sourceUpdatedAt                      String?
+  crawledAt                            DateTime @default(now())
+  createdAt                            DateTime @default(now())
+  updatedAt                            DateTime @updatedAt
+  products                             Product[]
+
+  @@index([companyId])
+  @@index([companyNameEn])
+  @@index([boothNo])
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  productKey  String    @unique
+  exhibitorId Int
+  companyId   Int
+  name        String
+  url         String?
+  imageUrl    String?
+  rawJson     String
+  crawledAt   DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  exhibitor   Exhibitor @relation(fields: [exhibitorId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([exhibitorId])
+  @@index([name])
+}
