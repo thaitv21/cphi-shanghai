@@ -29,6 +29,13 @@ async function main() {
       boothNo: true,
       countryEn: true,
       categoryEn: true,
+      companyRawJson: true,
+      products: {
+        select: {
+          name: true,
+          url: true,
+        },
+      },
     },
   });
 
@@ -43,15 +50,39 @@ async function main() {
     { header: "Booth No", key: "boothNo", width: 16 },
     { header: "Countries & Regions", key: "countriesAndRegions", width: 26 },
     { header: "Product Zones", key: "productZones", width: 32 },
+    { header: "Products", key: "products", width: 120 },
+    { header: "Phone", key: "phone", width: 28 },
+    { header: "Email", key: "email", width: 32 },
+    { header: "Address", key: "address", width: 60 },
   ];
 
   for (const exhibitor of exhibitors) {
+    const productText = exhibitor.products.map(p => p.name).join(", ") || '';
+
+    let phone = "";
+    let email = "";
+    let address = "";
+    if (exhibitor.companyRawJson) {
+      try {
+        const company = JSON.parse(exhibitor.companyRawJson) as Record<string, unknown>;
+        phone = String(company.company_telephone ?? "");
+        email = String(company.message_email ?? "");
+        address = String(company.detail_address ?? "");
+      } catch {
+        // leave empty if JSON is malformed
+      }
+    }
+
     worksheet.addRow({
       name: exhibitor.companyNameEn ?? "",
       hallNo: exhibitor.hallNo ?? "",
       boothNo: exhibitor.boothNo ?? "",
       countriesAndRegions: exhibitor.countryEn ?? "",
       productZones: exhibitor.categoryEn ?? "",
+      products: productText,
+      phone,
+      email,
+      address,
     });
   }
 
@@ -59,7 +90,7 @@ async function main() {
   worksheet.views = [{ state: "frozen", ySplit: 1 }];
   worksheet.autoFilter = {
     from: "A1",
-    to: "E1",
+    to: "I1",
   };
 
   await workbook.xlsx.writeFile(outputPath);
