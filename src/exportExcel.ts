@@ -67,7 +67,8 @@ async function main() {
         const company = JSON.parse(exhibitor.companyRawJson) as Record<string, unknown>;
         phone = String(company.company_telephone ?? "");
         email = String(company.message_email ?? "");
-        address = String(company.detail_address ?? "");
+        const relateCompany = company.relate_company as Record<string, unknown> | undefined;
+        address = String(relateCompany?.detail_address ?? company.detail_address ?? "");
       } catch {
         // leave empty if JSON is malformed
       }
